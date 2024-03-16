@@ -2,19 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Credit Notification Email Generator NDB</title>
+    <title>Nilam Direct Bank Amount Credit Message Email Generator</title>
     <link rel="icon" href="NDS_Logo_Transparent.png" type="image/png"> <!-- Adding the favicon for SEO -->
     <link rel="apple-touch-icon" sizes="180x180" href="NDS_Logo_Transparent.png"> <!-- Adding the Apple touch icon for SEO -->
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Custom CSS -->
     <style>
-        body, html {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            height: 100%;
-            color: #fff; /* Set text color */
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #emailResult {
+            display: none;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #emailContent {
+            white-space: pre-line;
         }
         video {
             position: fixed;
@@ -25,109 +68,89 @@
             object-fit: cover;
             z-index: -1;
         }
-        .content {
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
-            position: relative; /* Position relative for footer positioning */
-            min-height: 100%; /* Ensure content fills the entire viewport */
-        }
         footer {
             background-color: #b121d9;
-            color: white;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
             position: fixed;
             bottom: 0;
             width: 100%;
-            padding: 20px 0;
-            text-align: center; /* Center align footer text */
         }
-        .btn-primary {
-            background-color: #4933d6;
-            border-color: #4933d6;
-        }
-        #copyButton {
-            background-color: #9a57de;
-            border-color: #9a57de;
+        .warning {
+            color: red;
         }
     </style>
 </head>
 <body>
 
-<video autoplay loop muted playsinline>
-    <source src="background.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
+    <video autoplay loop muted playsinline>
+        <source src="background.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
-<div class="content container py-5">
-    <h1 class="mb-4">Credit Notification Email Generator NDB</h1>
-    <div class="form-group">
-        <label for="customerName">Enter Your Customer Name</label>
-        <input type="text" class="form-control text-center" id="customerName">
+    <div class="container">
+        <h1>Nilam Direct Bank Amount Credit Message Email Generator</h1>
+        <form id="creditForm">
+            <label for="customerName">Customer Name:</label>
+            <input type="text" id="customerName" name="customerName" required><br><br>
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required><br><br>
+            <label for="balance">Remaining Balance:</label>
+            <input type="number" id="balance" name="balance" required><br><br>
+            <button type="submit">Generate Email</button>
+            <p id="warning" class="warning" style="display:none;">Please fill all details</p>
+        </form>
+
+        <div id="emailResult">
+            <h2>Email Preview:</h2>
+            <p id="emailContent"></p>
+            <button id="copyButton" onclick="copyToClipboard()">Copy to Clipboard</button>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="amount">Enter Your Amount</label>
-        <input type="text" class="form-control text-center" id="amount">
-    </div>
-    <div class="form-group">
-        <label for="balance">Left Balance In A/C</label>
-        <input type="text" class="form-control text-center" id="balance">
-    </div>
-    <button onclick="generateText()" id="generateButton" class="btn btn-primary">Generate Text</button>
-    <button id="copyButton" onclick="copyToClipboard()" class="btn btn-secondary d-none">Copy to Clipboard</button>
-    <p id="warning" class="text-danger mt-3 d-none">Please check your details and try again because the generation is not completed!</p>
-    <div id="emailResult" class="mt-5 d-none">
-        <h2>Email Preview:</h2>
-        <p id="emailContent"></p>
-    </div>
-</div>
 
-<footer>
-    Made With ❤️ By NDS Payments Corp.
-</footer>
+    <footer>Made With ❤️ By NDS Payments Corp.</footer>
 
-<!-- Bootstrap JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<!-- jQuery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<!-- Popper.js -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<!-- Bootstrap JS -->
-<script>
-    var generatedText = ""; // Declaring this variable globally to access it in both functions
+    <script>
+        document.getElementById("creditForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var customerName = document.getElementById("customerName").value;
+            var amount = document.getElementById("amount").value;
+            var balance = document.getElementById("balance").value;
 
-    function generateText() {
-        var customerName = document.getElementById("customerName").value;
-        var amount = document.getElementById("amount").value;
-        var balance = document.getElementById("balance").value;
+            if (customerName === '' || amount === '' || balance === '') {
+                document.getElementById("warning").style.display = "block";
+                return;
+            } else {
+                document.getElementById("warning").style.display = "none";
+            }
 
-        // Generating the text with placeholders replaced by user inputs
-        generatedText = `Subject:- ₹${amount} Credit Confirmation\n\nDear ${customerName},\n\nWe're delighted to inform you that ₹${amount} has been successfully credited to your Nilam Direct Bank account.\n\nLeft Balance: ₹${balance}\n\nBest regards,\nNilam Direct Bank`;
+            var emailContent = `Subject: ₹${amount} Credit Confirmation\n\n`;
+            emailContent += `Dear ${customerName},\n\n`;
+            emailContent += `We're delighted to inform you that ₹${amount} has been successfully credited to your Nilam Direct Bank account.\n\n`;
+            emailContent += `Left Balance: ₹${balance}\n\n`;
+            emailContent += `Best regards,\n`;
+            emailContent += `Nilam Direct Bank`;
 
-        if (customerName && amount && balance) {
-            document.getElementById("warning").classList.add("d-none");
-            document.getElementById("copyButton").classList.remove("d-none");
-            document.getElementById("generateButton").innerText = "Generate Text"; // Reset button text
-            document.getElementById("emailContent").innerText = generatedText;
-            document.getElementById("emailResult").classList.remove("d-none");
-        } else {
-            document.getElementById("warning").classList.remove("d-none");
-            document.getElementById("copyButton").classList.add("d-none");
-            document.getElementById("emailResult").classList.add("d-none");
-        }
-    }
-
-    function copyToClipboard() {
-        var text = document.getElementById("emailContent").innerText;
-        navigator.clipboard.writeText(text).then(function() {
-            var copyButton = document.getElementById("copyButton");
-            copyButton.innerText = "Copied!";
-            setTimeout(function () {
-                copyButton.innerText = "Copy to Clipboard";
-            }, 2000); // Reset button text after 2 seconds
-        }).catch(function(error) {
-            console.error('Failed to copy: ', error);
+            document.getElementById("emailContent").innerText = emailContent;
+            document.getElementById("emailResult").style.display = "block";
         });
-    }
-</script>
+
+        function copyToClipboard() {
+            var emailContent = document.getElementById("emailContent").innerText;
+
+            navigator.clipboard.writeText(emailContent)
+                .then(function() {
+                    var copyButton = document.getElementById("copyButton");
+                    copyButton.innerText = "Copied!";
+                    setTimeout(function () {
+                        copyButton.innerText = "Copy to Clipboard";
+                    }, 2000); // Reset button text after 2 seconds
+                })
+                .catch(function(error) {
+                    console.error('Failed to copy: ', error);
+                });
+        }
+    </script>
 </body>
 </html>
