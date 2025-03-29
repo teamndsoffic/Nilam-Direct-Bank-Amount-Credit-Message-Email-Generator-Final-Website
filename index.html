@@ -2,155 +2,152 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nilam Direct Bank Amount Credit Message Email Generator</title>
-    <link rel="icon" href="NDS_Logo_Transparent.png" type="image/png"> <!-- Adding the favicon for SEO -->
-    <link rel="apple-touch-icon" sizes="180x180" href="NDS_Logo_Transparent.png"> <!-- Adding the Apple touch icon for SEO -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Credit Notification Email Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            background: url('background.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        form {
-            margin-bottom: 20px;
-        }
-        label {
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="number"],
-        button {
+        .card {
             width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s ease, transform 0.4s ease;
+            height: 0;
+            overflow: hidden;
+            margin: 0;
+        }
+        .visible {
+            opacity: 1;
+            transform: scale(1);
+            height: auto;
+            margin-top: 10px;
+        }
+        .copy-btn {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .copied {
+            background-color: #007bff !important;
+            transform: scale(1.05);
+        }
+        .generate-btn {
+            transition: all 0.3s ease;
+        }
+        .generate-btn:hover {
+            transform: scale(1.05);
+        }
+        .generate-btn:active {
+            transform: scale(0.95);
+        }
+        .footer {
+            text-align: center;
             padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #emailResult {
-            display: none;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        #emailContent {
-            white-space: pre-line;
-        }
-        video {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-        }
-        footer {
-            background-color: #b121d9;
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-        .warning {
-            color: red;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
         }
     </style>
 </head>
 <body>
 
-    <video autoplay loop muted playsinline>
-        <source src="background.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+<div class="container">
+    <div class="card">
+        <h4 class="text-center fw-bold">Credit Notification Email Generator</h4>
+        
+        <div class="mb-3">
+            <label class="fw-bold">Customer Name:</label>
+            <input type="text" id="customerName" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="fw-bold">Amount:</label>
+            <input type="number" id="amount" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="fw-bold">Left Balance:</label>
+            <input type="number" id="leftBalance" class="form-control">
+        </div>
+        
+        <button class="btn btn-primary w-100 generate-btn" onclick="generateEmail()">Generate Email</button>
+        
+        <div class="mt-4">
+            <h5>Email Preview:</h5>
+            <p><strong>Subject:</strong> <span id="emailSubject"></span></p>
+            <button id="copySubjectBtn" class="btn btn-secondary btn-sm copy-btn hidden" onclick="copyToClipboard('emailSubject', 'copySubjectBtn')">Copy Subject</button>
 
-    <div class="container">
-        <h1>Nilam Direct Bank Amount Credit Message Email Generator</h1>
-        <form id="creditForm">
-            <label for="customerName">Customer Name:</label>
-            <input type="text" id="customerName" name="customerName" required><br><br>
-            <label for="amount">Amount:</label>
-            <input type="number" id="amount" name="amount" required><br><br>
-            <label for="balance">Remaining Balance:</label>
-            <input type="number" id="balance" name="balance" required><br><br>
-            <button type="submit">Generate Email</button>
-            <p id="warning" class="warning" style="display:none;">Please fill all details</p>
-        </form>
-
-        <div id="emailResult">
-            <h2>Email Preview:</h2>
-            <p id="emailContent"></p>
-            <button id="copyButton" onclick="copyToClipboard()">Copy to Clipboard</button>
+            <p class="mt-3"><strong>Body:</strong></p>
+            <textarea id="emailBody" class="form-control" rows="5" readonly></textarea>
+            <button id="copyBodyBtn" class="btn btn-secondary btn-sm mt-2 copy-btn hidden" onclick="copyToClipboard('emailBody', 'copyBodyBtn')">Copy Body</button>
         </div>
     </div>
+</div>
 
-    <footer>Made With ❤️ By NDS Payments Corp.</footer>
+<div class="footer">© 2025 iStore NDS. All rights reserved.</div>
 
-    <script>
-        document.getElementById("creditForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            var customerName = document.getElementById("customerName").value;
-            var amount = document.getElementById("amount").value;
-            var balance = document.getElementById("balance").value;
+<script>
+    function generateEmail() {
+        let customerName = document.getElementById("customerName").value.trim();
+        let amount = document.getElementById("amount").value.trim();
+        let leftBalance = document.getElementById("leftBalance").value.trim();
 
-            if (customerName === '' || amount === '' || balance === '') {
-                document.getElementById("warning").style.display = "block";
-                return;
-            } else {
-                document.getElementById("warning").style.display = "none";
-            }
-
-            var emailContent = `Subject: ₹${amount} Credit Confirmation\n\n`;
-            emailContent += `Dear ${customerName},\n\n`;
-            emailContent += `We're delighted to inform you that ₹${amount} has been successfully credited to your Nilam Direct Bank account.\n\n`;
-            emailContent += `Left Balance: ₹${balance}\n\n`;
-            emailContent += `Best regards,\n`;
-            emailContent += `Nilam Direct Bank`;
-
-            document.getElementById("emailContent").innerText = emailContent;
-            document.getElementById("emailResult").style.display = "block";
-        });
-
-        function copyToClipboard() {
-            var emailContent = document.getElementById("emailContent").innerText;
-
-            navigator.clipboard.writeText(emailContent)
-                .then(function() {
-                    var copyButton = document.getElementById("copyButton");
-                    copyButton.innerText = "Copied!";
-                    setTimeout(function () {
-                        copyButton.innerText = "Copy to Clipboard";
-                    }, 2000); // Reset button text after 2 seconds
-                })
-                .catch(function(error) {
-                    console.error('Failed to copy: ', error);
-                });
+        if (customerName === "" || amount === "" || leftBalance === "") {
+            alert("Please fill in all fields.");
+            return;
         }
-    </script>
+
+        let subject = `₹${amount} credited to your NDB account`;
+        let body = `Dear ${customerName},\n\n` +
+                   `We are pleased to inform you that ₹${amount} has been successfully credited to your NDB account.\n\n` +
+                   `Your updated balance is ₹${leftBalance}.\n\n` +
+                   `Thank you for banking with us!\n\nBest Regards,\nNilam Direct Bank`;
+
+        document.getElementById("emailSubject").innerText = subject;
+        document.getElementById("emailBody").value = body;
+
+        let copySubjectBtn = document.getElementById("copySubjectBtn");
+        let copyBodyBtn = document.getElementById("copyBodyBtn");
+
+        copySubjectBtn.classList.remove("hidden");
+        copySubjectBtn.classList.add("visible");
+
+        copyBodyBtn.classList.remove("hidden");
+        copyBodyBtn.classList.add("visible");
+    }
+
+    function copyToClipboard(elementId, buttonId) {
+        let textToCopy = elementId === "emailBody" ? document.getElementById(elementId).value : document.getElementById(elementId).innerText;
+        let button = document.getElementById(buttonId);
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            button.innerText = "Copied Successfully!";
+            button.classList.add("copied");
+
+            setTimeout(() => {
+                button.innerText = buttonId === "copySubjectBtn" ? "Copy Subject" : "Copy Body";
+                button.classList.remove("copied");
+            }, 3000);
+        }).catch(err => {
+            console.error("Failed to copy: ", err);
+        });
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
